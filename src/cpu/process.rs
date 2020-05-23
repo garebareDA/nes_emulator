@@ -1,6 +1,16 @@
 use super::register::Registers;
 use super::super::bus::Bus;
 
+pub fn reset(register: &mut Registers, bus: &mut Bus) {
+  let pc = bus.read_word(0xFFFC);
+  register.set_PC(pc);
+  register.dec_SP();
+}
+
+pub fn brk(register: &mut Registers, bus:&mut Bus) {
+  
+}
+
 pub fn process_nmi(register: &mut Registers, bus: &mut Bus) {
   register.set_break(false);
   push((register.get_PC() >> 8) as u8, register, bus);
