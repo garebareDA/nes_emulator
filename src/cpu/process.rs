@@ -4,7 +4,6 @@ use super::super::bus::Bus;
 pub fn reset(register: &mut Registers, bus: &mut Bus) {
   let pc = bus.read_word(0xFFFC);
   register.set_PC(pc);
-  register.dec_SP();
 }
 
 pub fn brk(register: &mut Registers, bus:&mut Bus) {

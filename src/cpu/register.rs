@@ -1,3 +1,4 @@
+#[derive(Debug, Clone)]
 struct Status {
   negative: bool,
   overflow: bool,
@@ -9,7 +10,7 @@ struct Status {
   carry: bool,
 }
 
-#[allow(non_snake_case)]
+#[allow(non_snake_case)] #[derive(Debug, Clone)]
 pub struct Registers {
   A: u8,
   X: u8,
