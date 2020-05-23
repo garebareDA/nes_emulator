@@ -39,4 +39,43 @@ impl Registers {
       },
     }
   }
+
+  pub fn set_PC(&mut self, pc: u16) {
+    self.PC = pc;
+  }
+
+  pub fn set_break(&mut self, breaks: bool) {
+    self.P.break_mode = breaks;
+  }
+
+  pub fn get_P(&self) -> u8 {
+    bool_to_u8(self.P.negative) << 7
+      | bool_to_u8(self.P.overflow) << 6
+      | bool_to_u8(self.P.reserved) << 5
+      | bool_to_u8(self.P.break_mode) << 4
+      | bool_to_u8(self.P.decimal_mode) << 3
+      | bool_to_u8(self.P.interrupt) << 2
+      | bool_to_u8(self.P.zero) << 1
+      | bool_to_u8(self.P.carry) as u8
+  }
+
+  pub fn get_PC(&self) -> u16 {
+    return self.PC;
+  }
+
+  pub fn get_SP(&self) -> u8 {
+    return self.SP;
+  }
+
+  pub fn dec_SP(&mut self) {
+    self.SP -= 1;
+  }
+}
+
+fn bool_to_u8(v: bool) -> u8 {
+  if v {
+    1
+  } else {
+    0
+  }
 }
