@@ -41,6 +41,10 @@ impl Registers {
     }
   }
 
+  pub fn set_interrupt(&mut self, i:bool) {
+    self.P.interrupt = i;
+  }
+
   pub fn set_PC(&mut self, pc: u16) {
     self.PC = pc;
   }
@@ -60,6 +64,10 @@ impl Registers {
       | bool_to_u8(self.P.carry) as u8
   }
 
+  pub fn get_interrupt(&self) -> bool{
+    return self.P.interrupt;
+  }
+
   pub fn get_PC(&self) -> u16 {
     return self.PC;
   }
@@ -70,6 +78,10 @@ impl Registers {
 
   pub fn dec_SP(&mut self) {
     self.SP -= 1;
+  }
+
+  pub fn inc_PC(&mut self) {
+    self.PC += 1;
   }
 }
 
