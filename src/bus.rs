@@ -20,7 +20,7 @@ impl Bus {
     (upper << 8 | lower) as u16
   }
 
-  fn read(&mut self, addr: u16) -> u8 {
+  pub fn read(&mut self, addr: u16) -> u8 {
     match addr {
       0x0000..=0x1FFF => self.work_ram.read(addr & 0x07FF),
       0x6000..=0x7FFF => {

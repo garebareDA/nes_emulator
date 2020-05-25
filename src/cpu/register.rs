@@ -1,3 +1,5 @@
+use super::super::helper:: *;
+
 #[derive(Debug, Clone)]
 struct Status {
   negative: bool,
@@ -41,6 +43,10 @@ impl Registers {
     }
   }
 
+  pub fn set_A(&mut self, a:u8){
+    self.A = a;
+  }
+
   pub fn set_interrupt(&mut self, i:bool) {
     self.P.interrupt = i;
   }
@@ -49,8 +55,28 @@ impl Registers {
     self.PC = pc;
   }
 
+  pub fn set_negative(&mut self, nega:bool) {
+    self.P.negative = nega;
+  }
+
+  pub fn set_overflow(&mut self, over:bool) {
+    self.P.overflow = over;
+  }
+
   pub fn set_break(&mut self, breaks: bool) {
     self.P.break_mode = breaks;
+  }
+
+  pub fn set_zero(&mut self, zero:bool){
+    self.P.zero = zero;
+  }
+
+  pub fn set_carry(&mut self, carry: bool){
+    self.P.carry = carry;
+  }
+
+  pub fn get_A(&self) -> u8 {
+    self.A
   }
 
   pub fn get_P(&self) -> u8 {
@@ -62,6 +88,10 @@ impl Registers {
       | bool_to_u8(self.P.interrupt) << 2
       | bool_to_u8(self.P.zero) << 1
       | bool_to_u8(self.P.carry) as u8
+  }
+
+  pub fn get_carry(&self) -> bool{
+    self.P.carry
   }
 
   pub fn get_interrupt(&self) -> bool{
@@ -82,13 +112,5 @@ impl Registers {
 
   pub fn inc_PC(&mut self) {
     self.PC += 1;
-  }
-}
-
-fn bool_to_u8(v: bool) -> u8 {
-  if v {
-    1
-  } else {
-    0
   }
 }
