@@ -1,4 +1,4 @@
-use super::super::helper:: *;
+use super::super::helper::*;
 
 #[derive(Debug, Clone)]
 struct Status {
@@ -12,7 +12,8 @@ struct Status {
   carry: bool,
 }
 
-#[allow(non_snake_case)] #[derive(Debug, Clone)]
+#[allow(non_snake_case)]
+#[derive(Debug, Clone)]
 pub struct Registers {
   A: u8,
   X: u8,
@@ -43,11 +44,11 @@ impl Registers {
     }
   }
 
-  pub fn set_A(&mut self, a:u8){
+  pub fn set_A(&mut self, a: u8) {
     self.A = a;
   }
 
-  pub fn set_interrupt(&mut self, i:bool) {
+  pub fn set_interrupt(&mut self, i: bool) {
     self.P.interrupt = i;
   }
 
@@ -55,11 +56,11 @@ impl Registers {
     self.PC = pc;
   }
 
-  pub fn set_negative(&mut self, nega:bool) {
-    self.P.negative = nega;
+  pub fn set_negative(&mut self, nega: bool) {
+    self.P.negative = nega
   }
 
-  pub fn set_overflow(&mut self, over:bool) {
+  pub fn set_overflow(&mut self, over: bool) {
     self.P.overflow = over;
   }
 
@@ -67,11 +68,11 @@ impl Registers {
     self.P.break_mode = breaks;
   }
 
-  pub fn set_zero(&mut self, zero:bool){
+  pub fn set_zero(&mut self, zero: bool) {
     self.P.zero = zero;
   }
 
-  pub fn set_carry(&mut self, carry: bool){
+  pub fn set_carry(&mut self, carry: bool) {
     self.P.carry = carry;
   }
 
@@ -90,11 +91,7 @@ impl Registers {
       | bool_to_u8(self.P.carry) as u8
   }
 
-  pub fn get_carry(&self) -> bool{
-    self.P.carry
-  }
-
-  pub fn get_interrupt(&self) -> bool{
+  pub fn get_interrupt(&self) -> bool {
     return self.P.interrupt;
   }
 
@@ -104,6 +101,22 @@ impl Registers {
 
   pub fn get_SP(&self) -> u8 {
     return self.SP;
+  }
+
+  pub fn get_negative(&self) -> bool {
+    self.P.negative
+  }
+
+  pub fn get_overflow(&self) -> bool {
+    self.P.overflow
+  }
+
+  pub fn get_zero(&self) -> bool {
+    self.P.zero
+  }
+
+  pub fn get_carry(&self) -> bool {
+    self.P.carry
   }
 
   pub fn dec_SP(&mut self) {

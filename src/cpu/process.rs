@@ -100,7 +100,7 @@ pub fn asl(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
   };
   let shifted = (fetched << 1) as u8;
 
-  let is_carry = (shifted & 0x80 )== 0x80;
+  let is_carry = (shifted & 0x80) == 0x80;
   let is_zero = shifted == 0;
   let is_negative = (shifted & 0x80) == 0x80;
 
@@ -108,9 +108,9 @@ pub fn asl(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
   register.set_zero(is_zero);
   register.set_negative(is_negative);
 
-  if mode == "accumulator"{
+  if mode == "accumulator" {
     register.set_A(shifted);
-  }else{
+  } else {
     bus.write(opeland, shifted);
   }
 }
@@ -123,7 +123,7 @@ pub fn lsr(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
   };
   let shifted = (fetched >> 1) as u8;
 
-  let is_carry = (shifted & 0x01 ) == 0x01;
+  let is_carry = (shifted & 0x01) == 0x01;
   let is_zero = shifted == 0;
   let is_negative = (shifted & 0x80) == 0x80;
 
@@ -131,9 +131,9 @@ pub fn lsr(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
   register.set_zero(is_zero);
   register.set_negative(is_negative);
 
-  if mode == "accumulator"{
+  if mode == "accumulator" {
     register.set_A(shifted);
-  }else{
+  } else {
     bus.write(opeland, shifted);
   }
 }
@@ -145,7 +145,7 @@ pub fn rol(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
     bus.read(opeland)
   };
 
-  let shifted = fetched << 1 |  if register.get_carry() { 0x01 } else { 0x00 };
+  let shifted = fetched << 1 | if register.get_carry() { 0x01 } else { 0x00 };
 
   let is_carry = (shifted & 0x01) == 0x01;
   let is_zero = shifted == 0;
@@ -155,9 +155,9 @@ pub fn rol(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
   register.set_zero(is_zero);
   register.set_negative(is_negative);
 
-  if mode == "accumulator"{
+  if mode == "accumulator" {
     register.set_A(shifted);
-  }else{
+  } else {
     bus.write(opeland, shifted);
   }
 }
@@ -169,7 +169,7 @@ pub fn ror(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
     bus.read(opeland)
   };
 
-  let shifted = fetched << 1 |  if register.get_carry() { 0x80 } else { 0x00 };
+  let shifted = fetched << 1 | if register.get_carry() { 0x80 } else { 0x00 };
 
   let is_carry = (shifted & 0x01) == 0x01;
   let is_zero = shifted == 0;
@@ -179,15 +179,59 @@ pub fn ror(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
   register.set_zero(is_zero);
   register.set_negative(is_negative);
 
-  if mode == "accumulator"{
+  if mode == "accumulator" {
     register.set_A(shifted);
-  }else{
+  } else {
     bus.write(opeland, shifted);
   }
 }
 
-pub fn bcc (opeland: u16, register: &mut Registers, bus: &mut Bus) {
-  
+pub fn bcc(opeland: u16, register: &mut Registers) {
+  if !register.get_carry() {
+    register.set_PC(opeland);
+  }
+}
+
+pub fn bcs(opeland: u16, register: &mut Registers) {
+  if register.get_carry() {
+    register.set_PC(opeland);
+  }
+}
+
+pub fn beq(opeland: u16, register: &mut Registers) {
+  if register.get_zero() {
+    register.set_PC(opeland);
+  }
+}
+
+pub fn bne(opeland: u16, register: &mut Registers) {
+  if !register.get_zero() {
+    register.set_PC(opeland);
+  }
+}
+
+pub fn bvc(opeland: u16, register: &mut Registers) {
+  if !register.get_overflow() {
+    register.set_PC(opeland);
+  }
+}
+
+pub fn bvs(opeland: u16, register: &mut Registers) {
+  if register.get_overflow() {
+    register.set_PC(opeland);
+  }
+}
+
+pub fn bpl(opeland: u16, register: &mut Registers) {
+  if !register.get_negative() {
+    register.set_PC(opeland);
+  }
+}
+
+pub fn bmi(opeland: u16, register: &mut Registers) {
+  if register.get_negative() {
+    register.set_PC(opeland);
+  }
 }
 
 pub fn reset(register: &mut Registers, bus: &mut Bus) {
