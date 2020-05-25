@@ -234,7 +234,7 @@ pub fn bmi(opeland: u16, register: &mut Registers) {
   }
 }
 
-pub fn bit (opeland: u16, register: &mut Registers, bus: &mut Bus,) {
+pub fn bit(opeland: u16, register: &mut Registers, bus: &mut Bus) {
   let fetched = bus.read(opeland);
   let and = register.get_A() & fetched;
 
@@ -245,6 +245,24 @@ pub fn bit (opeland: u16, register: &mut Registers, bus: &mut Bus,) {
   register.set_zero(is_zero);
   register.set_negative(is_negative);
   register.set_overflow(is_overfloaw);
+}
+
+pub fn jmp(opeland: u16, register: &mut Registers) {
+  register.set_PC(opeland);
+}
+
+pub fn jsr(opeland: u16, register: &mut Registers, bus: &mut Bus) {
+  let pc = register.get_PC();
+  push((pc >> 8) as u8, register, bus);
+  push(pc as u8, register, bus);
+  register.set_PC(opeland);
+}
+
+pub fn rts(register: &mut Registers, bus: &mut Bus) {
+  let lower = pop(register, bus) as u16;
+  let upper = pop(register, bus) as u16;
+  register.set_PC(upper << 8 | lower);
+  register.inc_PC();
 }
 
 pub fn reset(register: &mut Registers, bus: &mut Bus) {
@@ -299,4 +317,10 @@ fn push(data: u8, register: &mut Registers, bus: &mut Bus) {
   let addr = register.get_SP() as u16;
   bus.write((addr | 0x0100), data);
   register.dec_SP();
+}
+
+fn pop(register: &mut Registers, bus: &mut Bus) -> u8{
+  register.inc_PC();
+  let addr = 0x0100 | register.get_SP() as u16;
+  bus.read(addr)
 }

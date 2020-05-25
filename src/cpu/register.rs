@@ -119,6 +119,10 @@ impl Registers {
     self.P.carry
   }
 
+  pub fn inc_SP(&mut self) {
+    self.SP += 1;
+  }
+
   pub fn dec_SP(&mut self) {
     self.SP -= 1;
   }
