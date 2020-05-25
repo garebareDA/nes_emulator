@@ -234,6 +234,19 @@ pub fn bmi(opeland: u16, register: &mut Registers) {
   }
 }
 
+pub fn bit (opeland: u16, register: &mut Registers, bus: &mut Bus,) {
+  let fetched = bus.read(opeland);
+  let and = register.get_A() & fetched;
+
+  let is_zero = and == 0;
+  let is_negative = (and & 0x80) == 0x80;
+  let is_overfloaw = (and & 0x40) == 0x40;
+
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+  register.set_overflow(is_overfloaw);
+}
+
 pub fn reset(register: &mut Registers, bus: &mut Bus) {
   let pc = bus.read_word(0xFFFC);
   register.set_interrupt(true);
