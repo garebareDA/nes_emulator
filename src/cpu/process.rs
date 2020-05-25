@@ -36,6 +36,10 @@ pub fn sbc(opeland:u16, register: &mut Registers, bus: &mut Bus) {
   register.set_A(result as u8);
 }
 
+pub fn and(opeland:u16, register: &mut Registers, bus: &mut Bus) {
+  
+}
+
 pub fn reset(register: &mut Registers, bus: &mut Bus) {
   let pc = bus.read_word(0xFFFC);
   register.set_interrupt(true);
