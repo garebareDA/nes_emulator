@@ -413,6 +413,51 @@ pub fn clv(register: &mut Registers) {
   register.set_overflow(false);
 }
 
+pub fn lda(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
+  let fetched = if mode == "immediate" {
+    bus.read(opeland) as u16
+  } else {
+    opeland
+  };
+
+  let is_zero = fetched == 0;
+  let is_negative = (fetched & 0x80) == 0x80;
+
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+  register.set_A(fetched as u8);
+}
+
+pub fn ldx(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
+  let fetched = if mode == "immediate" {
+    bus.read(opeland) as u16
+  } else {
+    opeland
+  };
+
+  let is_zero = fetched == 0;
+  let is_negative = (fetched & 0x80) == 0x80;
+
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+  register.set_X(fetched as u8);
+}
+
+pub fn ldy(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
+  let fetched = if mode == "immediate" {
+    bus.read(opeland) as u16
+  } else {
+    opeland
+  };
+
+  let is_zero = fetched == 0;
+  let is_negative = (fetched & 0x80) == 0x80;
+
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+  register.set_Y(fetched as u8);
+}
+
 
 
 pub fn nop(){
