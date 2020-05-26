@@ -265,6 +265,64 @@ pub fn rts(register: &mut Registers, bus: &mut Bus) {
   register.inc_PC();
 }
 
+pub fn cmp(operand:u16, register: &mut Registers, bus: &mut Bus, mode:&str){
+  let fetchd = if mode == "immediate" {
+    bus.read(operand) as u16
+  }else{
+    operand
+  };
+
+  let result = register.get_A() as u16 - fetchd;
+
+  let is_carry = register.get_A() as u16 >= fetchd;
+  let is_zero = result == 0;
+  let is_negative = (result & 0x80) == 0x80;
+
+  register.set_carry(is_carry);
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+}
+
+pub fn cpx(operand:u16, register: &mut Registers, bus: &mut Bus, mode:&str){
+  let fetchd = if mode == "immediate" {
+    bus.read(operand) as u16
+  }else{
+    operand
+  };
+
+  let result = register.get_X() as u16 - fetchd;
+
+  let is_carry = register.get_X() as u16 >= fetchd;
+  let is_zero = result == 0;
+  let is_negative = (result & 0x80) == 0x80;
+
+  register.set_carry(is_carry);
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+}
+
+pub fn cpy(operand:u16, register: &mut Registers, bus: &mut Bus, mode:&str){
+  let fetchd = if mode == "immediate" {
+    bus.read(operand) as u16
+  }else{
+    operand
+  };
+
+  let result = register.get_Y() as u16 - fetchd;
+
+  let is_carry = register.get_Y() as u16 >= fetchd;
+  let is_zero = result == 0;
+  let is_negative = (result & 0x80) == 0x80;
+
+  register.set_carry(is_carry);
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+}
+
+pub fn nop(){
+  return;
+}
+
 pub fn reset(register: &mut Registers, bus: &mut Bus) {
   let pc = bus.read_word(0xFFFC);
   register.set_interrupt(true);

@@ -80,6 +80,14 @@ impl Registers {
     self.A
   }
 
+  pub fn get_X(&self) -> u8 {
+    self.X
+  }
+
+  pub fn get_Y(&self) -> u8 {
+    self.Y
+  }
+
   pub fn get_P(&self) -> u8 {
     bool_to_u8(self.P.negative) << 7
       | bool_to_u8(self.P.overflow) << 6
