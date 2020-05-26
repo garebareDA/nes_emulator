@@ -2,6 +2,7 @@ use super::super::bus::Bus;
 use super::process;
 use super::register::Registers;
 
+#[derive(Debug)]
 enum Opecode {
   ADC,
   SBC,
@@ -75,6 +76,7 @@ enum Opecode {
   IGN,
 }
 
+#[derive(Debug)]
 pub enum Addressing {
   Immediate,
   ZeroPage,
@@ -95,7 +97,9 @@ pub fn run(register: &mut Registers, bus: &mut Bus) {
   let code = fetch(register, bus);
   println!("code {}", code);
   let (opecode, mode) = from_code(code);
+  println!("opecode {:?}, mode {:?}", opecode, mode);
   let opeland = fetch_opeland(&mode, register, bus);
+  println!("opeland {}", opeland);
 
   match opecode {
     Opecode::BRK => {

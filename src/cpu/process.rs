@@ -603,6 +603,7 @@ pub fn brk(register: &mut Registers, bus: &mut Bus) {
   register.set_PC(next);
 }
 
+
 fn push_status(register: &mut Registers, bus: &mut Bus) {
   let status = register.get_P();
   push(status, register, bus);
