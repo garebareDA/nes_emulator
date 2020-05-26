@@ -591,7 +591,7 @@ pub fn irq(register: &mut Registers, bus: &mut Bus) {
 
 pub fn brk(register: &mut Registers, bus: &mut Bus) {
   let interrupt = register.get_interrupt();
-  if !interrupt {
+  if interrupt {
     return;
   }
   register.set_break(true);

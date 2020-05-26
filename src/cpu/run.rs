@@ -1,4 +1,5 @@
 use super::super::bus::Bus;
+use super::process;
 use super::register::Registers;
 
 enum Opecode {
@@ -90,80 +91,318 @@ pub enum Addressing {
   IndirectAbsolute,
 }
 
-pub fn run(register:&mut Registers, bus:&mut Bus) {
+pub fn run(register: &mut Registers, bus: &mut Bus) {
   let code = fetch(register, bus);
+  println!("code {}", code);
   let (opecode, mode) = from_code(code);
   let opeland = fetch_opeland(&mode, register, bus);
 
-  
+  match opecode {
+    Opecode::BRK => {
+      process::brk(register, bus);
+    }
+
+    Opecode::ADC => match mode {
+      Addressing::Immediate => process::adc(opeland, register, bus, "immediate"),
+      _ => process::adc(opeland, register, bus, "non"),
+    },
+
+    Opecode::SBC => match mode {
+      Addressing::Immediate => process::sbc(opeland, register, bus, "immediate"),
+      _ => process::sbc(opeland, register, bus, "non"),
+    },
+
+    Opecode::AND => match mode {
+      Addressing::Immediate => process::and(opeland, register, bus, "immediate"),
+      _ => process::and(opeland, register, bus, "non"),
+    },
+
+    Opecode::ORA => match mode {
+      Addressing::Immediate => process::ora(opeland, register, bus, "immediate"),
+      _ => process::ora(opeland, register, bus, "non"),
+    },
+
+    Opecode::EOR => match mode {
+      Addressing::Immediate => process::eor(opeland, register, bus, "immediate"),
+      _ => process::eor(opeland, register, bus, "non"),
+    },
+
+    Opecode::ASL => match mode {
+      Addressing::Immediate => process::asl(opeland, register, bus, "immediate"),
+      _ => process::asl(opeland, register, bus, "non"),
+    },
+
+    Opecode::LSR => match mode {
+      Addressing::Immediate => process::lsr(opeland, register, bus, "immediate"),
+      _ => process::lsr(opeland, register, bus, "non"),
+    },
+
+    Opecode::ROL => match mode {
+      Addressing::Immediate => process::rol(opeland, register, bus, "immediate"),
+      _ => process::rol(opeland, register, bus, "non"),
+    },
+
+    Opecode::ROR => match mode {
+      Addressing::Immediate => process::ror(opeland, register, bus, "immediate"),
+      _ => process::ror(opeland, register, bus, "non"),
+    },
+
+    Opecode::BCC => {
+      process::bcc(opeland, register);
+    }
+
+    Opecode::BCS => {
+      process::bcs(opeland, register);
+    }
+
+    Opecode::BEQ => {
+      process::beq(opeland, register);
+    }
+
+    Opecode::BNE => {
+      process::bne(opeland, register);
+    }
+
+    Opecode::BVC => {
+      process::bvc(opeland, register);
+    }
+
+    Opecode::BVS => {
+      process::bvs(opeland, register);
+    }
+
+    Opecode::BPL => {
+      process::bpl(opeland, register);
+    }
+
+    Opecode::BMI => {
+      process::bmi(opeland, register);
+    }
+
+    Opecode::BIT => {
+      process::bit(opeland, register, bus);
+    }
+
+    Opecode::JMP => {
+      process::jmp(opeland, register);
+    }
+
+    Opecode::JSR => {
+      process::jsr(opeland, register, bus);
+    }
+
+    Opecode::RTS => {
+      process::rts(register, bus);
+    }
+
+    Opecode::CMP => match mode {
+      Addressing::Immediate => process::cmp(opeland, register, bus, "immediate"),
+      _ => process::cmp(opeland, register, bus, "non"),
+    },
+
+    Opecode::CPX => match mode {
+      Addressing::Immediate => process::cpx(opeland, register, bus, "immediate"),
+      _ => process::cmp(opeland, register, bus, "non"),
+    },
+
+    Opecode::CPY => match mode {
+      Addressing::Immediate => process::cpy(opeland, register, bus, "immediate"),
+      _ => process::cpy(opeland, register, bus, "non"),
+    },
+
+    Opecode::INC => {
+      process::inc(opeland, register, bus);
+    }
+
+    Opecode::DEC => {
+      process::dec(opeland, register, bus);
+    }
+
+    Opecode::INX => {
+      process::inx(register);
+    }
+
+    Opecode::DEX => {
+      process::dex(register);
+    }
+
+    Opecode::INY => {
+      process::iny(register);
+    }
+
+    Opecode::DEY => {
+      process::dey(register);
+    }
+
+    Opecode::CLC => {
+      process::clc(register);
+    }
+
+    Opecode::SEC => {
+      process::sec(register);
+    }
+
+    Opecode::CLI => {
+      process::cli(register);
+    }
+
+    Opecode::SEI => {
+      process::sei(register);
+    }
+
+    Opecode::CLD => {
+      process::cld(register);
+    }
+
+    Opecode::SED => {
+      process::sed(register);
+    }
+
+    Opecode::CLV => {
+      process::clv(register);
+    }
+
+    Opecode::LDA => match mode {
+      Addressing::Immediate => process::lda(opeland, register, bus, "immediate"),
+      _ => process::lda(opeland, register, bus, "non"),
+    },
+
+    Opecode::LDX => match mode {
+      Addressing::Immediate => process::ldx(opeland, register, bus, "immediate"),
+      _ => process::ldx(opeland, register, bus, "non"),
+    },
+
+    Opecode::LDY => match mode {
+      Addressing::Immediate => process::ldy(opeland, register, bus, "immediate"),
+      _ => process::ldy(opeland, register, bus, "non"),
+    },
+
+    Opecode::STA => {
+      process::sta(opeland, register, bus);
+    }
+
+    Opecode::STX => {
+      process::stx(opeland, register, bus);
+    }
+
+    Opecode::STY => {
+      process::sty(opeland, register, bus);
+    }
+
+    Opecode::TAX => {
+      process::tax(register);
+    }
+
+    Opecode::TXA => {
+      process::txa(register);
+    }
+
+    Opecode::TAY => {
+      process::tay(register);
+    }
+
+    Opecode::TYA => {
+      process::tya(register);
+    }
+
+    Opecode::TSX => {
+      process::tsx(register);
+    }
+
+    Opecode::TXS => {
+      process::txs(register);
+    }
+
+    Opecode::PHA => {
+      process::pha(register, bus);
+    }
+
+    Opecode::PLA => {
+      process::pla(register, bus);
+    }
+
+    Opecode::PHP => {
+      process::php(register, bus);
+    }
+
+    Opecode::PLP => {
+      process::plp(register, bus);
+    }
+
+    Opecode::NOP => process::nop(),
+
+    _ => {}
+  }
 }
 
-fn fetch_opeland(addressing:&Addressing, register:&mut Registers, bus:&mut Bus) -> u16{
+fn fetch_opeland(addressing: &Addressing, register: &mut Registers, bus: &mut Bus) -> u16 {
   match addressing {
-    Addressing::Accumulator => {0x0000},
-    Addressing::Implied => {0x0000},
+    Addressing::Accumulator => 0x0000,
+    Addressing::Implied => 0x0000,
     Addressing::Immediate => fetch(register, bus) as u16,
     Addressing::Relative => {
       let addr = fetch(register, bus) as u16;
       if addr < 0x80 {
         addr + register.get_PC()
-    } else {
+      } else {
         addr + register.get_PC() - 256
+      }
     }
-    },
     Addressing::ZeroPage => fetch(register, bus) as u16,
     Addressing::ZeroPageX => {
       let addr = fetch(register, bus);
       let result = (addr + register.get_X()) & 0xFF;
       result as u16
-    },
-    Addressing::ZeroPageY=> {
+    }
+    Addressing::ZeroPageY => {
       let addr = fetch(register, bus);
       let result = (addr + register.get_Y()) & 0xFF;
       result as u16
-    },
+    }
     Addressing::Absolute => {
       let addr = fetch_word(register, bus);
       addr
-    },
+    }
     Addressing::AbsoluteX => {
       let addr = fetch_word(register, bus);
       let result = (addr + register.get_X() as u16) & 0xFFFF;
       result
-    },
+    }
     Addressing::AbsoluteY => {
       let addr = fetch_word(register, bus);
       let result = (addr + register.get_Y() as u16) & 0xFFFF;
       result
-    },
+    }
     Addressing::IndirectX => {
       let base_addr = (fetch(register, bus) + register.get_X()) & 0xFF;
       let addr = bus.read(base_addr as u16) + (bus.read((base_addr as u16 + 1) & 0xFF) << 8);
       let result = addr & 0xFF;
       result as u16
-    },
+    }
     Addressing::IndirectY => {
       let addr_or_data = fetch(register, bus);
-      let base_addr = bus.read(addr_or_data as u16) + (bus.read(addr_or_data as u16 + 1) & 0xFF) << 8;
+      let base_addr =
+        bus.read(addr_or_data as u16) + (bus.read(addr_or_data as u16 + 1) & 0xFF) << 8;
       let addr = (base_addr + register.get_Y()) & 0xFF;
       addr as u16
     }
     Addressing::IndirectAbsolute => {
       let addr_or_data = fetch_word(register, bus);
-      let addr = bus.read(addr_or_data) + (bus.read((addr_or_data & 0xFF00) | (((addr_or_data & 0xFF) + 1) & 0xFF)) << 8);
+      let addr = bus.read(addr_or_data)
+        + (bus.read((addr_or_data & 0xFF00) | (((addr_or_data & 0xFF) + 1) & 0xFF)) << 8);
       let result = addr & 0xFF;
       result as u16
     }
   }
 }
 
-fn fetch(register:&mut Registers, bus: &mut Bus) -> u8 {
+fn fetch(register: &mut Registers, bus: &mut Bus) -> u8 {
   let code = bus.read(register.get_PC());
   register.inc_PC();
   code
 }
 
-fn fetch_word(register:&mut Registers, bus:&mut Bus) -> u16 {
+fn fetch_word(register: &mut Registers, bus: &mut Bus) -> u16 {
   let lower = bus.read(register.get_PC()) as u16;
   register.inc_PC();
   let upper = bus.read(register.get_PC()) as u16;
@@ -171,7 +410,7 @@ fn fetch_word(register:&mut Registers, bus:&mut Bus) -> u16 {
   (upper << 8 | lower) as u16
 }
 
-fn from_code(code:u8) -> (Opecode, Addressing) {
+fn from_code(code: u8) -> (Opecode, Addressing) {
   match code {
     0x69 => (Opecode::ADC, Addressing::Immediate),
     0x65 => (Opecode::ADC, Addressing::ZeroPage),
@@ -308,6 +547,12 @@ fn from_code(code:u8) -> (Opecode, Addressing) {
     0xA1 => (Opecode::LDA, Addressing::IndirectX),
     0xB1 => (Opecode::LDA, Addressing::IndirectY),
 
+    0xA2 => (Opecode::LDX, Addressing::Immediate),
+    0xA6 => (Opecode::LDX, Addressing::ZeroPage),
+    0xB6 => (Opecode::LDX, Addressing::ZeroPageY),
+    0xAE => (Opecode::LDX, Addressing::Absolute),
+    0xBE => (Opecode::LDX, Addressing::AbsoluteY),
+
     0xA0 => (Opecode::LDY, Addressing::Immediate),
     0xA4 => (Opecode::LDY, Addressing::ZeroPage),
     0xB4 => (Opecode::LDY, Addressing::ZeroPageX),
@@ -343,7 +588,6 @@ fn from_code(code:u8) -> (Opecode, Addressing) {
     0x28 => (Opecode::PLP, Addressing::Implied),
 
     0xEA => (Opecode::NOP, Addressing::Implied),
-    _ => panic!("panic!")
+    _ => panic!("panic!"),
   }
 }
-
