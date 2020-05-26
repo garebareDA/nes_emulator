@@ -91,11 +91,14 @@ pub enum Addressing {
 }
 
 pub fn run(register:&mut Registers, bus:&mut Bus) {
-  let opecode = fetch(register, bus);
+  let code = fetch(register, bus);
+  let (opecode, mode) = from_code(code);
+  let opeland = fetch_opeland(&mode, register, bus);
+
   
 }
 
-fn fetco_opeland(addressing:&Addressing, register:&mut Registers, bus:&mut Bus) -> u16{
+fn fetch_opeland(addressing:&Addressing, register:&mut Registers, bus:&mut Bus) -> u16{
   match addressing {
     Addressing::Accumulator => {0x0000},
     Addressing::Implied => {0x0000},
