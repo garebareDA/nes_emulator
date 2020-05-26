@@ -530,7 +530,31 @@ pub fn txs(register: &mut Registers) {
   register.set_SP(result);
 }
 
+pub fn pha(register: &mut Registers, bus: &mut Bus) {
+  let result = register.get_A();
+  push(result, register, bus);
+}
 
+pub fn pla(register: &mut Registers, bus: &mut Bus) {
+  let result = pop(register, bus);
+
+  let is_negative = (result & 0x80) == 0x80;
+  let is_zero = result == 0;
+
+  register.set_negative(is_negative);
+  register.set_zero(is_zero);
+  register.set_A(result);
+}
+
+pub fn php(register: &mut Registers, bus: &mut Bus) {
+  let result = register.get_P();
+  push(result, register, bus);
+}
+
+pub fn plp(register: &mut Registers, bus: &mut Bus) {
+  let result = pop(register, bus);
+  register.set_P(result);
+}
 
 pub fn nop(){
   return;
