@@ -385,6 +385,36 @@ pub fn dey(register: &mut Registers) {
   register.set_Y(result);
 }
 
+pub fn clc(register: &mut Registers) {
+  register.set_carry(false);
+}
+
+pub fn sec(register: &mut Registers) {
+  register.set_carry(true);
+}
+
+pub fn cli(register: &mut Registers) {
+  register.set_interrupt(false);
+}
+
+pub fn sei(register: &mut Registers) {
+  register.set_interrupt(true);
+}
+
+pub fn cld(register: &mut Registers) {
+  register.set_decimal(false);
+}
+
+pub fn sed(register: &mut Registers) {
+  register.set_decimal(true);
+}
+
+pub fn clv(register: &mut Registers) {
+  register.set_overflow(false);
+}
+
+
+
 pub fn nop(){
   return;
 }

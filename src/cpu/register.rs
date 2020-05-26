@@ -56,6 +56,10 @@ impl Registers {
     self.Y = y;
   }
 
+  pub fn set_decimal(&mut self, d: bool) {
+    self.P.decimal_mode = d;
+  }
+
   pub fn set_interrupt(&mut self, i: bool) {
     self.P.interrupt = i;
   }
