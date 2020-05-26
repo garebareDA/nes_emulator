@@ -95,7 +95,7 @@ pub fn run(register:&mut Registers, bus:&mut Bus) {
   
 }
 
-fn fetchOpeland(addressing:&Addressing, register:&mut Registers, bus:&mut Bus) -> u16{
+fn fetco_opeland(addressing:&Addressing, register:&mut Registers, bus:&mut Bus) -> u16{
   match addressing {
     Addressing::Accumulator => {0x0000},
     Addressing::Implied => {0x0000},
@@ -154,6 +154,20 @@ fn fetchOpeland(addressing:&Addressing, register:&mut Registers, bus:&mut Bus) -
   }
 }
 
+fn fetch(register:&mut Registers, bus: &mut Bus) -> u8 {
+  let code = bus.read(register.get_PC());
+  register.inc_PC();
+  code
+}
+
+fn fetch_word(register:&mut Registers, bus:&mut Bus) -> u16 {
+  let lower = bus.read(register.get_PC()) as u16;
+  register.inc_PC();
+  let upper = bus.read(register.get_PC()) as u16;
+  register.inc_PC();
+  (upper << 8 | lower) as u16
+}
+
 fn from_code(code:u8) -> (Opecode, Addressing) {
   match code {
     0x69 => (Opecode::ADC, Addressing::Immediate),
@@ -192,21 +206,141 @@ fn from_code(code:u8) -> (Opecode, Addressing) {
     0x01 => (Opecode::ORA, Addressing::IndirectX),
     0x11 => (Opecode::ORA, Addressing::IndirectY),
 
-    
-    _ => {}
+    0x49 => (Opecode::EOR, Addressing::Immediate),
+    0x45 => (Opecode::EOR, Addressing::ZeroPage),
+    0x55 => (Opecode::EOR, Addressing::ZeroPageX),
+    0x4D => (Opecode::EOR, Addressing::Absolute),
+    0x5D => (Opecode::EOR, Addressing::AbsoluteX),
+    0x59 => (Opecode::EOR, Addressing::AbsoluteY),
+    0x41 => (Opecode::EOR, Addressing::IndirectX),
+    0x51 => (Opecode::EOR, Addressing::IndirectY),
+
+    0x0A => (Opecode::ASL, Addressing::Accumulator),
+    0x06 => (Opecode::ASL, Addressing::ZeroPage),
+    0x16 => (Opecode::ASL, Addressing::ZeroPageX),
+    0x0E => (Opecode::ASL, Addressing::Absolute),
+    0x1E => (Opecode::ASL, Addressing::AbsoluteX),
+
+    0x4A => (Opecode::LSR, Addressing::Accumulator),
+    0x46 => (Opecode::LSR, Addressing::ZeroPage),
+    0x56 => (Opecode::LSR, Addressing::ZeroPageX),
+    0x4E => (Opecode::LSR, Addressing::Absolute),
+    0x5E => (Opecode::LSR, Addressing::AbsoluteX),
+
+    0x2A => (Opecode::ROL, Addressing::Accumulator),
+    0x26 => (Opecode::ROL, Addressing::ZeroPage),
+    0x36 => (Opecode::ROL, Addressing::ZeroPageX),
+    0x2E => (Opecode::ROL, Addressing::Absolute),
+    0x3E => (Opecode::ROL, Addressing::AbsoluteX),
+
+    0x6A => (Opecode::ROR, Addressing::Accumulator),
+    0x66 => (Opecode::ROR, Addressing::ZeroPage),
+    0x76 => (Opecode::ROR, Addressing::ZeroPageX),
+    0x6E => (Opecode::ROR, Addressing::Absolute),
+    0x7E => (Opecode::ROR, Addressing::AbsoluteX),
+
+    0x90 => (Opecode::BCC, Addressing::Relative),
+    0xB0 => (Opecode::BCS, Addressing::Relative),
+    0xF0 => (Opecode::BEQ, Addressing::Relative),
+    0xD0 => (Opecode::BNE, Addressing::Relative),
+    0x50 => (Opecode::BVC, Addressing::Relative),
+    0x70 => (Opecode::BVS, Addressing::Relative),
+    0x10 => (Opecode::BPL, Addressing::Relative),
+    0x30 => (Opecode::BMI, Addressing::Relative),
+
+    0x24 => (Opecode::BIT, Addressing::ZeroPageX),
+    0x2C => (Opecode::BIT, Addressing::Absolute),
+
+    0x24 => (Opecode::JMP, Addressing::ZeroPage),
+    0x2C => (Opecode::JMP, Addressing::Absolute),
+
+    0x20 => (Opecode::JSR, Addressing::Absolute),
+
+    0x60 => (Opecode::RTS, Addressing::Implied),
+
+    0x00 => (Opecode::BRK, Addressing::Implied),
+    0x40 => (Opecode::RTI, Addressing::Implied),
+
+    0xC9 => (Opecode::CMP, Addressing::Immediate),
+    0xC5 => (Opecode::CMP, Addressing::ZeroPage),
+    0xD5 => (Opecode::CMP, Addressing::ZeroPageX),
+    0xCD => (Opecode::CMP, Addressing::Absolute),
+    0xDD => (Opecode::CMP, Addressing::AbsoluteX),
+    0xD9 => (Opecode::CMP, Addressing::AbsoluteY),
+    0xC1 => (Opecode::CMP, Addressing::IndirectX),
+    0xD1 => (Opecode::CMP, Addressing::IndirectY),
+
+    0xE0 => (Opecode::CPX, Addressing::Immediate),
+    0xC4 => (Opecode::CPX, Addressing::ZeroPage),
+    0xCC => (Opecode::CPX, Addressing::Absolute),
+
+    0xC0 => (Opecode::CPY, Addressing::Immediate),
+    0xC4 => (Opecode::CPY, Addressing::ZeroPage),
+    0xCC => (Opecode::CPY, Addressing::Absolute),
+
+    0xE6 => (Opecode::INC, Addressing::ZeroPage),
+    0xF6 => (Opecode::INC, Addressing::ZeroPageX),
+    0xEE => (Opecode::INC, Addressing::Absolute),
+    0xFE => (Opecode::INC, Addressing::AbsoluteX),
+
+    0xE8 => (Opecode::INX, Addressing::Implied),
+    0xCA => (Opecode::DEX, Addressing::Implied),
+    0xC8 => (Opecode::INY, Addressing::Implied),
+    0x88 => (Opecode::DEY, Addressing::Implied),
+
+    0x18 => (Opecode::CLC, Addressing::Implied),
+    0x38 => (Opecode::SEC, Addressing::Implied),
+    0x58 => (Opecode::CLI, Addressing::Implied),
+    0x78 => (Opecode::SEI, Addressing::Implied),
+    0xD8 => (Opecode::CLD, Addressing::Implied),
+    0xF8 => (Opecode::SED, Addressing::Implied),
+    0xB8 => (Opecode::CLV, Addressing::Implied),
+
+    0xA9 => (Opecode::LDA, Addressing::Implied),
+    0xA5 => (Opecode::LDA, Addressing::ZeroPage),
+    0xB5 => (Opecode::LDA, Addressing::ZeroPageX),
+    0xAD => (Opecode::LDA, Addressing::Absolute),
+    0xBD => (Opecode::LDA, Addressing::AbsoluteX),
+    0xB9 => (Opecode::LDA, Addressing::AbsoluteY),
+    0xA1 => (Opecode::LDA, Addressing::IndirectX),
+    0xB1 => (Opecode::LDA, Addressing::IndirectY),
+
+    0xA0 => (Opecode::LDY, Addressing::Immediate),
+    0xA4 => (Opecode::LDY, Addressing::ZeroPage),
+    0xB4 => (Opecode::LDY, Addressing::ZeroPageX),
+    0xAC => (Opecode::LDY, Addressing::Absolute),
+    0xBC => (Opecode::LDY, Addressing::AbsoluteX),
+
+    0x85 => (Opecode::STA, Addressing::ZeroPage),
+    0x95 => (Opecode::STA, Addressing::ZeroPageX),
+    0x8D => (Opecode::STA, Addressing::Absolute),
+    0x9D => (Opecode::STA, Addressing::AbsoluteX),
+    0x99 => (Opecode::STA, Addressing::AbsoluteY),
+    0x81 => (Opecode::STA, Addressing::IndirectX),
+    0x91 => (Opecode::STA, Addressing::IndirectY),
+
+    0x86 => (Opecode::STX, Addressing::ZeroPage),
+    0x96 => (Opecode::STX, Addressing::ZeroPageY),
+    0x8E => (Opecode::STX, Addressing::Absolute),
+
+    0x84 => (Opecode::STY, Addressing::ZeroPage),
+    0x94 => (Opecode::STY, Addressing::ZeroPageX),
+    0x8C => (Opecode::STY, Addressing::Absolute),
+
+    0xAA => (Opecode::TAX, Addressing::Implied),
+    0x8A => (Opecode::TXA, Addressing::Implied),
+    0xA8 => (Opecode::TAY, Addressing::Implied),
+    0x98 => (Opecode::TYA, Addressing::Implied),
+    0x9A => (Opecode::TXS, Addressing::Implied),
+    0xBA => (Opecode::TSX, Addressing::Implied),
+
+    0x48 => (Opecode::PHA, Addressing::Implied),
+    0x68 => (Opecode::PLA, Addressing::Implied),
+    0x08 => (Opecode::PHP, Addressing::Implied),
+    0x28 => (Opecode::PLP, Addressing::Implied),
+
+    0xEA => (Opecode::NOP, Addressing::Implied),
+    _ => panic!("panic!")
   }
 }
 
-fn fetch(register:&mut Registers, bus: &mut Bus) -> u8 {
-  let code = bus.read(register.get_PC());
-  register.inc_PC();
-  code
-}
-
-fn fetch_word(register:&mut Registers, bus:&mut Bus) -> u16 {
-  let lower = bus.read(register.get_PC()) as u16;
-  register.inc_PC();
-  let upper = bus.read(register.get_PC()) as u16;
-  register.inc_PC();
-  (upper << 8 | lower) as u16
-}
