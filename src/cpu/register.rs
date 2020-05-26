@@ -56,6 +56,10 @@ impl Registers {
     self.Y = y;
   }
 
+  pub fn set_SP(&mut self, sp:u8){
+    self.SP = sp;
+  }
+
   pub fn set_decimal(&mut self, d: bool) {
     self.P.decimal_mode = d;
   }

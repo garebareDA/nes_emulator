@@ -470,6 +470,66 @@ pub fn sty(opeland: u16, register: &mut Registers, bus: &mut Bus) {
   bus.write(opeland, register.get_Y());
 }
 
+pub fn tax(register: &mut Registers) {
+  let result = register.get_A();
+
+  let is_negative = (result & 0x80) == 0x80;
+  let is_zero = result == 0;
+
+  register.set_negative(is_negative);
+  register.set_zero(is_zero);
+  register.set_X(result);
+}
+
+pub fn txa(register: &mut Registers) {
+  let result = register.get_X();
+
+  let is_negative = (result & 0x80) == 0x80;
+  let is_zero = result == 0;
+
+  register.set_negative(is_negative);
+  register.set_zero(is_zero);
+  register.set_A(result);
+}
+
+pub fn tay(register: &mut Registers) {
+  let result = register.get_A();
+
+  let is_negative = (result & 0x80) == 0x80;
+  let is_zero = result == 0;
+
+  register.set_negative(is_negative);
+  register.set_zero(is_zero);
+  register.set_Y(result);
+}
+
+pub fn tya(register: &mut Registers) {
+  let result = register.get_Y();
+
+  let is_negative = (result & 0x80) == 0x80;
+  let is_zero = result == 0;
+
+  register.set_negative(is_negative);
+  register.set_zero(is_zero);
+  register.set_A(result);
+}
+
+pub fn tsx(register: &mut Registers) {
+  let result = register.get_SP();
+
+  let is_negative = (result & 0x80) == 0x80;
+  let is_zero = result == 0;
+
+  register.set_negative(is_negative);
+  register.set_zero(is_zero);
+  register.set_X(result);
+}
+
+pub fn txs(register: &mut Registers) {
+  let result = register.get_X();
+  register.set_SP(result);
+}
+
 
 
 pub fn nop(){
