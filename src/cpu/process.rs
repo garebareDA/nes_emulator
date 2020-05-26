@@ -458,6 +458,18 @@ pub fn ldy(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
   register.set_Y(fetched as u8);
 }
 
+pub fn sta(opeland: u16, register: &mut Registers, bus: &mut Bus) {
+  bus.write(opeland, register.get_A());
+}
+
+pub fn stx(opeland: u16, register: &mut Registers, bus: &mut Bus) {
+  bus.write(opeland, register.get_X());
+}
+
+pub fn sty(opeland: u16, register: &mut Registers, bus: &mut Bus) {
+  bus.write(opeland, register.get_Y());
+}
+
 
 
 pub fn nop(){
