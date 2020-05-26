@@ -319,6 +319,72 @@ pub fn cpy(operand:u16, register: &mut Registers, bus: &mut Bus, mode:&str){
   register.set_negative(is_negative);
 }
 
+pub fn inc(operand:u16, register: &mut Registers, bus: &mut Bus,) {
+  let fetched = bus.read(operand) + 1;
+
+  let is_zero = fetched == 0;
+  let is_negative = (fetched & 0x80) == 0x80;
+
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+  bus.write(operand, fetched);
+}
+
+pub fn dec(operand:u16, register: &mut Registers, bus: &mut Bus) {
+  let fetched = bus.read(operand) - 1;
+
+  let is_zero = fetched == 0;
+  let is_negative = (fetched & 0x80) == 0x80;
+
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+  bus.write(operand, fetched);
+}
+
+pub fn inx(register: &mut Registers) {
+  let result = register.get_X() + 1;
+
+  let is_zero = result == 0;
+  let is_negative = (result & 0x80) == 0x80;
+
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+  register.set_X(result);
+}
+
+pub fn dex(register: &mut Registers) {
+  let result = register.get_X() - 1;
+
+  let is_zero = result == 0;
+  let is_negative = (result & 0x80) == 0x80;
+
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+  register.set_X(result);
+}
+
+pub fn iny(register: &mut Registers) {
+  let result = register.get_Y() + 1;
+
+  let is_zero = result == 0;
+  let is_negative = (result & 0x80) == 0x80;
+
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+  register.set_Y(result);
+}
+
+pub fn dey(register: &mut Registers) {
+  let result = register.get_Y() - 1;
+
+  let is_zero = result == 0;
+  let is_negative = (result & 0x80) == 0x80;
+
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+  register.set_Y(result);
+}
+
 pub fn nop(){
   return;
 }

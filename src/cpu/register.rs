@@ -48,6 +48,14 @@ impl Registers {
     self.A = a;
   }
 
+  pub fn set_X(&mut self, x:u8) {
+    self.X = x;
+  }
+
+  pub fn set_Y(&mut self, y:u8) {
+    self.Y = y;
+  }
+
   pub fn set_interrupt(&mut self, i: bool) {
     self.P.interrupt = i;
   }
