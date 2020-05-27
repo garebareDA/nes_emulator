@@ -252,9 +252,12 @@ pub fn jmp(opeland: u16, register: &mut Registers) {
 }
 
 pub fn jsr(opeland: u16, register: &mut Registers, bus: &mut Bus) {
-  let pc = register.get_PC();
+  let pc = register.get_PC() - 1;
+  println!("{:?}", register);
   push((pc >> 8) as u8, register, bus);
+  println!("{:?}", register);
   push(pc as u8, register, bus);
+  println!("{:?}", register);
   register.set_PC(opeland);
 }
 
@@ -265,10 +268,10 @@ pub fn rts(register: &mut Registers, bus: &mut Bus) {
   register.inc_PC();
 }
 
-pub fn cmp(operand:u16, register: &mut Registers, bus: &mut Bus, mode:&str){
+pub fn cmp(operand: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
   let fetchd = if mode == "immediate" {
     bus.read(operand) as u16
-  }else{
+  } else {
     operand
   };
 
@@ -283,10 +286,10 @@ pub fn cmp(operand:u16, register: &mut Registers, bus: &mut Bus, mode:&str){
   register.set_negative(is_negative);
 }
 
-pub fn cpx(operand:u16, register: &mut Registers, bus: &mut Bus, mode:&str){
+pub fn cpx(operand: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
   let fetchd = if mode == "immediate" {
     bus.read(operand) as u16
-  }else{
+  } else {
     operand
   };
 
@@ -301,10 +304,10 @@ pub fn cpx(operand:u16, register: &mut Registers, bus: &mut Bus, mode:&str){
   register.set_negative(is_negative);
 }
 
-pub fn cpy(operand:u16, register: &mut Registers, bus: &mut Bus, mode:&str){
+pub fn cpy(operand: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
   let fetchd = if mode == "immediate" {
     bus.read(operand) as u16
-  }else{
+  } else {
     operand
   };
 
@@ -319,7 +322,7 @@ pub fn cpy(operand:u16, register: &mut Registers, bus: &mut Bus, mode:&str){
   register.set_negative(is_negative);
 }
 
-pub fn inc(operand:u16, register: &mut Registers, bus: &mut Bus,) {
+pub fn inc(operand: u16, register: &mut Registers, bus: &mut Bus) {
   let fetched = bus.read(operand) + 1;
 
   let is_zero = fetched == 0;
@@ -330,7 +333,7 @@ pub fn inc(operand:u16, register: &mut Registers, bus: &mut Bus,) {
   bus.write(operand, fetched);
 }
 
-pub fn dec(operand:u16, register: &mut Registers, bus: &mut Bus) {
+pub fn dec(operand: u16, register: &mut Registers, bus: &mut Bus) {
   let fetched = bus.read(operand) - 1;
 
   let is_zero = fetched == 0;
@@ -556,7 +559,26 @@ pub fn plp(register: &mut Registers, bus: &mut Bus) {
   register.set_P(result);
 }
 
-pub fn nop(){
+pub fn rla(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
+  let fetched = bus.read(opeland);
+  let result_rol = fetched + 1 | (if register.get_carry() {0x01}else {0x00});
+
+  let is_carry = (fetched & 0x80) == 0x80;
+
+  bus.write(opeland, fetched);
+
+  let result_and = register.get_A() & result_rol;
+
+  let is_zero = result_and == 0;
+  let is_negative = (result_and & 0x80) == 0x80;
+
+  register.set_carry(is_carry);
+  register.set_zero(is_zero);
+  register.set_negative(is_negative);
+  register.set_A(result_and);
+}
+
+pub fn nop() {
   return;
 }
 
@@ -603,7 +625,6 @@ pub fn brk(register: &mut Registers, bus: &mut Bus) {
   register.set_PC(next);
 }
 
-
 fn push_status(register: &mut Registers, bus: &mut Bus) {
   let status = register.get_P();
   push(status, register, bus);
@@ -615,7 +636,7 @@ fn push(data: u8, register: &mut Registers, bus: &mut Bus) {
   register.dec_SP();
 }
 
-fn pop(register: &mut Registers, bus: &mut Bus) -> u8{
+fn pop(register: &mut Registers, bus: &mut Bus) -> u8 {
   register.inc_PC();
   let addr = 0x0100 | register.get_SP() as u16;
   bus.read(addr)

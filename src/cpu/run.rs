@@ -94,6 +94,7 @@ pub enum Addressing {
 }
 
 pub fn run(register: &mut Registers, bus: &mut Bus) {
+  println!("register {:?}", register);
   let code = fetch(register, bus);
   println!("code {}", code);
   let (opecode, mode) = from_code(code);
@@ -542,7 +543,7 @@ fn from_code(code: u8) -> (Opecode, Addressing) {
     0xF8 => (Opecode::SED, Addressing::Implied),
     0xB8 => (Opecode::CLV, Addressing::Implied),
 
-    0xA9 => (Opecode::LDA, Addressing::Implied),
+    0xA9 => (Opecode::LDA, Addressing::Immediate),
     0xA5 => (Opecode::LDA, Addressing::ZeroPage),
     0xB5 => (Opecode::LDA, Addressing::ZeroPageX),
     0xAD => (Opecode::LDA, Addressing::Absolute),
@@ -592,6 +593,14 @@ fn from_code(code: u8) -> (Opecode, Addressing) {
     0x28 => (Opecode::PLP, Addressing::Implied),
 
     0xEA => (Opecode::NOP, Addressing::Implied),
+
+    0x23 => (Opecode::RLA, Addressing::IndirectX),
+    0x27 => (Opecode::RLA, Addressing::ZeroPage),
+    0x2F => (Opecode::RLA, Addressing::Absolute),
+    0x33 => (Opecode::RLA, Addressing::IndirectY),
+    0x37 => (Opecode::RLA, Addressing::ZeroPageX),
+    0x3B => (Opecode::RLA, Addressing::AbsoluteY),
+    0x3F => (Opecode::RLA, Addressing::AbsoluteX),
     _ => panic!("panic!"),
   }
 }
