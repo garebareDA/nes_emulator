@@ -1,6 +1,7 @@
 use super::cassette;
 use super::ram;
 
+#[derive(Debug)]
 pub struct Bus {
   program: cassette::roms::Rom,
   work_ram: ram::Ram,
@@ -40,7 +41,9 @@ impl Bus {
   pub fn write(&mut self, addr: u16, data: u8) {
     match addr {
       0x0000..=0x1FFF => self.work_ram.write(addr & 0x07FF, data),
-      0x2000..=0x3FFF =>{},
+      0x2000..=0x3FFF =>{
+        println!("ppu");
+      },
       0x6000..=0x7FFF => {
         println!(
           "Not implemented. This area is battery backup ram area 0x{:x}",

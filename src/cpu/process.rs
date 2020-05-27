@@ -3,7 +3,7 @@ use super::super::helper::*;
 use super::register::Registers;
 
 pub fn adc(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
-  let fetched = if mode == "immediate" {
+  let fetched = if mode != "immediate" {
     bus.read(opeland) as u16
   } else {
     opeland
@@ -24,7 +24,7 @@ pub fn adc(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
 }
 
 pub fn sbc(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
-  let fetched = if mode == "immediate" {
+  let fetched = if mode != "immediate" {
     bus.read(opeland) as u16
   } else {
     opeland
@@ -46,7 +46,7 @@ pub fn sbc(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
 }
 
 pub fn and(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
-  let fetched = if mode == "immediate" {
+  let fetched = if mode != "immediate" {
     bus.read(opeland) as u16
   } else {
     opeland
@@ -61,7 +61,7 @@ pub fn and(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
 }
 
 pub fn ora(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
-  let fetched = if mode == "immediate" {
+  let fetched = if mode != "immediate" {
     bus.read(opeland) as u16
   } else {
     opeland
@@ -77,7 +77,7 @@ pub fn ora(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
 }
 
 pub fn eor(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
-  let fetched = if mode == "immediate" {
+  let fetched = if mode != "immediate" {
     bus.read(opeland) as u16
   } else {
     opeland
@@ -253,11 +253,8 @@ pub fn jmp(opeland: u16, register: &mut Registers) {
 
 pub fn jsr(opeland: u16, register: &mut Registers, bus: &mut Bus) {
   let pc = register.get_PC() - 1;
-  println!("{:?}", register);
   push((pc >> 8) as u8, register, bus);
-  println!("{:?}", register);
   push(pc as u8, register, bus);
-  println!("{:?}", register);
   register.set_PC(opeland);
 }
 
@@ -269,7 +266,7 @@ pub fn rts(register: &mut Registers, bus: &mut Bus) {
 }
 
 pub fn cmp(operand: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
-  let fetchd = if mode == "immediate" {
+  let fetchd = if mode != "immediate" {
     bus.read(operand) as u16
   } else {
     operand
@@ -287,7 +284,7 @@ pub fn cmp(operand: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
 }
 
 pub fn cpx(operand: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
-  let fetchd = if mode == "immediate" {
+  let fetchd = if mode != "immediate" {
     bus.read(operand) as u16
   } else {
     operand
@@ -305,7 +302,7 @@ pub fn cpx(operand: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
 }
 
 pub fn cpy(operand: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
-  let fetchd = if mode == "immediate" {
+  let fetchd = if mode != "immediate" {
     bus.read(operand) as u16
   } else {
     operand
@@ -417,7 +414,7 @@ pub fn clv(register: &mut Registers) {
 }
 
 pub fn lda(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
-  let fetched = if mode == "immediate" {
+  let fetched = if mode != "immediate" {
     bus.read(opeland) as u16
   } else {
     opeland
@@ -432,7 +429,7 @@ pub fn lda(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
 }
 
 pub fn ldx(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
-  let fetched = if mode == "immediate" {
+  let fetched = if mode != "immediate" {
     bus.read(opeland) as u16
   } else {
     opeland
@@ -447,7 +444,7 @@ pub fn ldx(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
 }
 
 pub fn ldy(opeland: u16, register: &mut Registers, bus: &mut Bus, mode: &str) {
-  let fetched = if mode == "immediate" {
+  let fetched = if mode != "immediate" {
     bus.read(opeland) as u16
   } else {
     opeland
