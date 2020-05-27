@@ -498,8 +498,8 @@ fn from_code(code: u8) -> (Opecode, Addressing) {
     0x24 => (Opecode::BIT, Addressing::ZeroPageX),
     0x2C => (Opecode::BIT, Addressing::Absolute),
 
-    0x24 => (Opecode::JMP, Addressing::ZeroPage),
-    0x2C => (Opecode::JMP, Addressing::Absolute),
+    0x4C => (Opecode::JMP, Addressing::Absolute),
+    0x6C => (Opecode::JMP, Addressing::IndirectAbsolute),
 
     0x20 => (Opecode::JSR, Addressing::Absolute),
 
