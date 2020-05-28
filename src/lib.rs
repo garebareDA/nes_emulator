@@ -4,3 +4,4 @@ pub mod cpu;
 pub mod bus;
 pub mod helper;
 pub mod ppu;
+pub mod mmc;
