@@ -24,8 +24,4 @@ impl Registers {
       ppu_data: 0,
     }
   }
-
-  pub fn write(&mut self, addr:u16, data:u8) {
-    
-  }
 }
