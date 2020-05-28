@@ -1,5 +1,6 @@
 use super::ram::Ram;
 use super::cassette::roms;
+use super::mmc;
 
 pub type SpritePosition = (u8, u8);
 
@@ -23,6 +24,8 @@ impl Tile {
     position: &SpritePosition,
     config: &SpriteConfig,
     plallet: Vec<u8>,
+    mmc: &mmc::Mmc,
+  ){
     
-  )
+  }
 }
