@@ -1,6 +1,8 @@
+#[derive(Debug, Clone)]
 pub struct PaletteList {
   palette: Vec<u8>
 }
+
 
 impl PaletteList {
   pub fn new() -> PaletteList {

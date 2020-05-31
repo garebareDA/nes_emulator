@@ -24,7 +24,7 @@ impl Tile {
     crom: &roms::Rom,
     position: &SpritePosition,
     config: &SpriteConfig,
-    plallet: palette::PaletteList,
+    plallet: &palette::PaletteList,
     mmc: &mmc::Mmc,
   ) -> Tile {
     let block_id = ((position.0 % 4) / 2) + (((position.1 % 4) / 2) * 2);
@@ -32,9 +32,10 @@ impl Tile {
     let attr = get_attribute(vram, position, config);
     let pallet_id = (attr >> (block_id * 2)) & 0x03;
     let sprite = build(crom, splite_id, config.offset_addr_by_background_table, &mmc);
+    let get = plallet.clone().pallet_get(pallet_id);
     Tile{
       sprite: sprite,
-      plallet: plallet.pallet_get(pallet_id),
+      plallet: get,
     }
   }
 }
