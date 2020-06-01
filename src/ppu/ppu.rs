@@ -24,5 +24,23 @@ impl PPU {
     }
   }
 
-  
+  pub fn run(&mut self, cycle: usize) -> bool {
+    let cycle = self.cycle + cycle;
+    if cycle < 341 {
+      self.cycle = cycle;
+      return false;
+    }
+
+    if self.line == 0 {
+      self.background.crear();
+    }
+
+    self.cycle = cycle - 134;
+    self.line += 1;
+
+    if self.line <= 240 && self.line % 8 == 0 {
+      
+    }
+    return true;
+  }
 }
