@@ -4,7 +4,7 @@ use super::palette::PaletteList;
 
 pub mod scroll;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Registers {
   ctrl1: u8,
   ctrl2: u8,

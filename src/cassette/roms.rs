@@ -5,6 +5,7 @@ use std::io::Read;
 pub struct Rom {
   pub programs_rom: Vec<u8>,
   pub character_ram: Vec<u8>,
+  pub mapper: u8,
 }
 
 impl Rom {
@@ -25,9 +26,12 @@ impl Rom {
     let programs_rom = buf[NES_HEADER_SIZE..character_rom_start].to_vec();
     let character_ram = buf[character_rom_start..character_rom_end].to_vec();
 
+    let mapper = ((buf[6] & 0xF0) >> 4) | buf[7] & 0xF0;
+
     let cassette = Rom {
       programs_rom: programs_rom,
       character_ram: character_ram,
+      mapper:mapper,
     };
 
     return cassette;

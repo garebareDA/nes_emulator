@@ -1,10 +1,10 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 enum Enable {
   X,
   Y,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Scroll {
   x: u8,
   y: u8,

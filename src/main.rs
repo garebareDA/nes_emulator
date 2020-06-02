@@ -10,6 +10,9 @@ fn main() {
     let mut register = cpu::register::Registers::new();
     cpu::process::reset(&mut register, &mut bus);
     loop {
-        cpu::run::run(&mut register, &mut bus);
+        let cycle = cpu::run::run(&mut register, &mut bus);
+        if bus.ppu.run((cycle * 3) as usize,  &bus.mmc) {
+            println!("render");
+        }
     }
 }

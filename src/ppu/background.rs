@@ -4,7 +4,7 @@ use super::super::ram::Ram;
 use super::palette;
 use super::tile;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Background {
   pub tiles: Vec<tile::Tile>,
 }

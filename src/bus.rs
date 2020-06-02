@@ -1,12 +1,14 @@
 use super::cassette;
 use super::ram;
 use super::ppu::ppu::PPU;
+use super::mmc::Mmc;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Bus {
   program: cassette::roms::Rom,
   work_ram: ram::Ram,
-  ppu: PPU,
+  pub ppu: PPU,
+  pub mmc: Mmc,
 }
 
 impl Bus {
@@ -14,7 +16,8 @@ impl Bus {
     return Bus {
       program: program.clone(),
       work_ram: work_ram,
-      ppu:PPU::new(program, false),
+      ppu:PPU::new(program.clone(), false),
+      mmc:Mmc::new(program.mapper, 0),
     };
   }
 

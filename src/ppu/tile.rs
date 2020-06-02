@@ -13,7 +13,7 @@ pub struct SpriteConfig {
   pub is_background_enable: bool,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Tile {
   sprite: Vec<Vec<u8>>,
   plallet: Vec<u8>,

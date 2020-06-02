@@ -1,3 +1,4 @@
+#[derive(Debug, Clone)]
 pub struct Mmc {
   mapper: u8,
   bank: u8,

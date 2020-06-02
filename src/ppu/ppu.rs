@@ -6,7 +6,7 @@ use super::palette;
 use super::register;
 use super::tile;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct PPU {
   pub cycle: usize,
   pub line: usize,
