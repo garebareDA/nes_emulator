@@ -4,6 +4,7 @@ use super::palette::PaletteList;
 
 pub mod scroll;
 
+#[derive(Debug)]
 pub struct Registers {
   ctrl1: u8,
   ctrl2: u8,
@@ -82,6 +83,17 @@ impl Registers {
     }
   }
 
+  pub fn write(&mut self, addr: u16, data: u8, cassette: &Rom, vram: &mut ram::Ram, palette: &mut PaletteList) {
+    match addr {
+      0x0000 => self.ctrl1 = data,
+      0x0001 => self.ctrl2 = data,
+      0x0005 => self.scroll.write(data),
+      0x0006 => self.ppu_addr += data as u16,
+      0x0007 => self.ppu_data_write(addr, data, cassette, vram, palette),
+      _ => {},
+    }
+  }
+
   fn ppu_data_read(
     &mut self,
     addr: u16,
@@ -102,6 +114,24 @@ impl Registers {
     }
 
     buf
+  }
+
+  pub fn ppu_data_write(
+    &mut self,
+    addr: u16,
+    data: u8,
+    cassette: &Rom,
+    vram: &mut ram::Ram,
+    palette: &mut PaletteList,
+  ) {
+    if addr >= 0x2000 {
+      if addr >= 0x3f00 && addr < 0x4000 {
+        palette.write(addr - 0x3f00, data);
+      } else {
+        let addr = self.calc_addr(addr);
+        vram.write(addr, data);
+      }
+    }
   }
 
   pub fn get_background_table_offset(&self) -> u16 {

@@ -6,6 +6,7 @@ use super::palette;
 use super::register;
 use super::tile;
 
+#[derive(Debug)]
 pub struct PPU {
   pub cycle: usize,
   pub line: usize,
@@ -75,5 +76,9 @@ impl PPU {
       }
     }
     return false;
+  }
+
+  pub fn write(&mut self, addr: u16, data: u8) {
+    self.register.write(addr, data, &self.cassette, &mut self.vram, &mut self.palette);
   }
 }

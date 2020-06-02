@@ -1,17 +1,20 @@
 use super::cassette;
 use super::ram;
+use super::ppu::ppu::PPU;
 
 #[derive(Debug)]
 pub struct Bus {
   program: cassette::roms::Rom,
   work_ram: ram::Ram,
+  ppu: PPU,
 }
 
 impl Bus {
   pub fn new(program: cassette::roms::Rom, work_ram: ram::Ram) -> Bus {
     return Bus {
-      program: program,
+      program: program.clone(),
       work_ram: work_ram,
+      ppu:PPU::new(program, false),
     };
   }
 
@@ -42,7 +45,7 @@ impl Bus {
     match addr {
       0x0000..=0x1FFF => self.work_ram.write(addr & 0x07FF, data),
       0x2000..=0x3FFF =>{
-        println!("ppu");
+        self.ppu.write(addr - 0x2000, data)
       },
       0x6000..=0x7FFF => {
         println!(

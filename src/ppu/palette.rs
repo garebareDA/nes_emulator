@@ -22,6 +22,20 @@ impl PaletteList {
     self.palette[addr as usize]
   }
 
+  pub fn write(&mut self, addr: u16, data: u8) {
+    let index = self.get_palette_addr(addr) as usize;
+    self.palette[index] = data;
+  }
+
+  fn get_palette_addr(&self, addr: u16) -> u16 {
+    let mirror_downed = (addr & 0xFF) % 0x20;
+    if self.clone().is_sprite_mirror(mirror_downed) {
+      mirror_downed - 0x10
+    } else {
+      mirror_downed
+    }
+  }
+
   fn is_background_mirror(self, addr: u16) -> bool {
     (addr == 0x04) || (addr == 0x08) || (addr == 0x0c)
   }
