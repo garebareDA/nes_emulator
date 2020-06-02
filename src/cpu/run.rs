@@ -94,13 +94,9 @@ pub enum Addressing {
 }
 
 pub fn run(register: &mut Registers, bus: &mut Bus) -> u8 {
-  println!("register {:?}", register);
   let code = fetch(register, bus);
-  println!("code {}", code);
   let (opecode, mode, cycle) = from_code(code);
-  println!("opecode {:?}, mode {:?}", opecode, mode);
   let opeland = fetch_opeland(&mode, register, bus);
-  println!("opeland {}", opeland);
 
   match opecode {
     Opecode::BRK => {

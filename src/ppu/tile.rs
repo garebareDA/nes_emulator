@@ -57,8 +57,6 @@ pub fn get_attribute(vram: &Ram, position: &SpritePosition, config: &SpriteConfi
     return vram.read(addr);
   }
 
-  println!("{}", addr);
-
   if (addr >= 0x0400 && addr < 0x0800) || addr >= 0x0C00 {
     return vram.read(addr - 0x400 as u16);
   }
@@ -68,13 +66,12 @@ pub fn get_attribute(vram: &Ram, position: &SpritePosition, config: &SpriteConfi
 
 pub fn build(cram: &roms::Rom, sprite_id: u8, offset: u16, mmc: &mmc::Mmc) -> Vec<Vec<u8>> {
   let mut sprite: Vec<Vec<u8>> = (0..8).into_iter().map(|_| vec![0; 8]).collect();
-  println!("ppu!");
     for i in 0..16 {
       for j in 0..8 {
-        let addr = ((sprite_id + (1 as u8)) as u16) * 16 + i + offset;
+        let addr = ((sprite_id + (0 as u8)) as u16) * 16 + i + offset;
         let ram = cram.rom_read(mmc.create_chram_addr(addr));
         if ram & (0x80 >> j) as u8 != 0 {
-          sprite[((1 as u16) * 8 + i % 8) as usize][j] += (0x01 << (i / 8)) as u8;
+          sprite[(0 * 8 + i % 8) as usize][j] += (0x01 << (i / 8)) as u8;
         }
       }
     }

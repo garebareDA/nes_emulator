@@ -11,10 +11,11 @@ fn main() {
     cpu::process::reset(&mut register, &mut bus);
     loop {
         let cycle = cpu::run::run(&mut register, &mut bus);
-        if bus.ppu.run((cycle * 3) as usize,  &bus.mmc) {
+        let render = bus.ppu.run((cycle * 3) as usize,  &bus.mmc);
+        if render {
             println!("render");
             println!("{:?}", bus.ppu.background);
-            break;
+            return;
         }
     }
 }

@@ -70,15 +70,22 @@ impl PPU {
         &self.palette,
         mmc,
       );
-
-      if self.line >= 262 {
-        return true;
-      }
     }
+
+    if self.line >= 262 {
+      return true;
+    }
+
     return false;
   }
 
   pub fn write(&mut self, addr: u16, data: u8) {
-    self.register.write(addr, data, &self.cassette, &mut self.vram, &mut self.palette);
+    self.register.write(
+      addr,
+      data,
+      &self.cassette,
+      &mut self.vram,
+      &mut self.palette,
+    );
   }
 }
