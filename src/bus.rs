@@ -16,7 +16,7 @@ impl Bus {
     return Bus {
       program: program.clone(),
       work_ram: work_ram,
-      ppu:PPU::new(program.clone(), false),
+      ppu:PPU::new(program.clone(), true),
       mmc:Mmc::new(program.mapper, 0),
     };
   }

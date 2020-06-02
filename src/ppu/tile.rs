@@ -57,6 +57,8 @@ pub fn get_attribute(vram: &Ram, position: &SpritePosition, config: &SpriteConfi
     return vram.read(addr);
   }
 
+  println!("{}", addr);
+
   if (addr >= 0x0400 && addr < 0x0800) || addr >= 0x0C00 {
     return vram.read(addr - 0x400 as u16);
   }

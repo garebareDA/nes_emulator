@@ -11,7 +11,7 @@ pub struct PPU {
   pub cycle: usize,
   pub line: usize,
   register: register::Registers,
-  background: background::Background,
+  pub background: background::Background,
   cassette: Rom,
   vram: ram::Ram,
   palette: palette::PaletteList,
@@ -26,7 +26,7 @@ impl PPU {
       register: register::Registers::new(),
       background: background::Background::new(),
       cassette: cassette,
-      vram: ram::Ram::new(vec![0; 0x0200]),
+      vram: ram::Ram::new(vec![0; 0x02000]),
       palette: palette::PaletteList::new(),
       config: config,
     }

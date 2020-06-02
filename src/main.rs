@@ -13,6 +13,8 @@ fn main() {
         let cycle = cpu::run::run(&mut register, &mut bus);
         if bus.ppu.run((cycle * 3) as usize,  &bus.mmc) {
             println!("render");
+            println!("{:?}", bus.ppu.background);
+            break;
         }
     }
 }
