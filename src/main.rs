@@ -2,6 +2,7 @@ use nes_emulator::cassette;
 use nes_emulator::ram;
 use nes_emulator::bus;
 use nes_emulator::cpu;
+use nes_emulator::render;
 
 fn main() {
     let cassette = cassette::roms::Rom::new("./roms/sample1.nes");
@@ -15,6 +16,7 @@ fn main() {
         if render {
             println!("render");
             println!("{:?}", bus.ppu.background);
+            render::render_backgound(&bus.ppu.background);
             return;
         }
     }

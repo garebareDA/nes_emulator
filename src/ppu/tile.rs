@@ -15,8 +15,8 @@ pub struct SpriteConfig {
 
 #[derive(Debug, Clone)]
 pub struct Tile {
-  sprite: Vec<Vec<u8>>,
-  plallet: Vec<u8>,
+  pub sprite: Vec<Vec<u8>>,
+  pub plallet: Vec<u8>,
 }
 
 impl Tile {
