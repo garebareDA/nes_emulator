@@ -29,6 +29,7 @@ impl Tile {
     mmc: &mmc::Mmc,
   ) -> Tile {
     let block_id = ((position.0 % 4) / 2) + (((position.1 % 4) / 2) * 2);
+    
     let splite_id = get_sprite_id(vram, position, config);
     let attr = get_attribute(vram, position, config);
     let pallet_id = (attr >> (block_id * 2)) & 0x03;

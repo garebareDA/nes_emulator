@@ -83,13 +83,14 @@ impl Registers {
     }
   }
 
-  pub fn write(&mut self, addr: u16, data: u8, cassette: &Rom, vram: &mut ram::Ram, palette: &mut PaletteList) {
+  pub fn write(&mut self, addr: u16, data: u8, vram: &mut ram::Ram, palette: &mut PaletteList) {
+    println!("{} {}", addr, data);
     match addr {
       0x0000 => self.ctrl1 = data,
       0x0001 => self.ctrl2 = data,
       0x0005 => self.scroll.write(data),
       0x0006 => self.ppu_addr += data as u16,
-      0x0007 => self.ppu_data_write(addr, data, cassette, vram, palette),
+      0x0007 => self.ppu_data_write(addr, data, vram, palette),
       _ => {},
     }
   }
@@ -120,7 +121,6 @@ impl Registers {
     &mut self,
     addr: u16,
     data: u8,
-    cassette: &Rom,
     vram: &mut ram::Ram,
     palette: &mut PaletteList,
   ) {

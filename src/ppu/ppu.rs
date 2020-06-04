@@ -10,7 +10,7 @@ use super::tile;
 pub struct PPU {
   pub cycle: usize,
   pub line: usize,
-  register: register::Registers,
+  pub register: register::Registers,
   pub background: background::Background,
   cassette: Rom,
   vram: ram::Ram,
@@ -83,7 +83,6 @@ impl PPU {
     self.register.write(
       addr,
       data,
-      &self.cassette,
       &mut self.vram,
       &mut self.palette,
     );

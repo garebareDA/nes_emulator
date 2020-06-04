@@ -29,7 +29,7 @@ impl Background {
   ) {
     let clamped_tile_y = tile.1 % 30;
     let table_id_offset = if (tile.1 / 30) % 2 == 0 { 0 } else { 2 };
-    for x in 0..(32 + 1) {
+    for x in 0..32 {
       let tile_x = x + tile.0;
       let clamped_tile_x = tile_x % 32;
       let name_table_id = ((tile_x / 32) % 2) + table_id_offset;
