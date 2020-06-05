@@ -29,7 +29,6 @@ impl Tile {
     mmc: &mmc::Mmc,
   ) -> Tile {
     let block_id = ((position.0 % 4) / 2) + (((position.1 % 4) / 2) * 2);
-    
     let splite_id = get_sprite_id(vram, position, config);
     let attr = get_attribute(vram, position, config);
     let pallet_id = (attr >> (block_id * 2)) & 0x03;
@@ -69,8 +68,8 @@ pub fn build(cram: &roms::Rom, sprite_id: u8, offset: u16, mmc: &mmc::Mmc) -> Ve
   let mut sprite: Vec<Vec<u8>> = (0..8).into_iter().map(|_| vec![0; 8]).collect();
     for i in 0..16 {
       for j in 0..8 {
-        let addr = ((sprite_id + (0 as u8)) as u16) * 16 + i + offset;
-        let ram = cram.rom_read(mmc.create_chram_addr(addr));
+        let addr = sprite_id as u16 * 16 + i + offset;
+        let ram = cram.rom_read(addr);
         if ram & (0x80 >> j) as u8 != 0 {
           sprite[(0 * 8 + i % 8) as usize][j] += (0x01 << (i / 8)) as u8;
         }

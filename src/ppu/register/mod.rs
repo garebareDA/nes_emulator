@@ -3,6 +3,7 @@ use super::super::ram;
 use super::palette::PaletteList;
 
 pub mod scroll;
+pub mod ppu_addr;
 
 #[derive(Debug, Clone)]
 pub struct Registers {
@@ -11,7 +12,7 @@ pub struct Registers {
   status: u8,
   sprite_addr: u8,
   sprite_data: u16,
-  ppu_addr: u16,
+  ppu_addr: ppu_addr::PpuAddr,
   ppu_data: u8,
   pub scroll: scroll::Scroll,
 }
@@ -24,7 +25,7 @@ impl Registers {
       status: 0,
       sprite_addr: 0,
       sprite_data: 0,
-      ppu_addr: 0,
+      ppu_addr: ppu_addr::PpuAddr::new(),
       ppu_data: 0,
       scroll: scroll::Scroll::new(),
     }
@@ -84,13 +85,13 @@ impl Registers {
   }
 
   pub fn write(&mut self, addr: u16, data: u8, vram: &mut ram::Ram, palette: &mut PaletteList) {
-    println!("{} {}", addr, data);
+    println!("{} {}", data, addr);
     match addr {
       0x0000 => self.ctrl1 = data,
       0x0001 => self.ctrl2 = data,
       0x0005 => self.scroll.write(data),
-      0x0006 => self.ppu_addr += data as u16,
-      0x0007 => self.ppu_data_write(addr, data, vram, palette),
+      0x0006 => self.ppu_addr.write(data),
+      0x0007 => self.ppu_data_write(data, vram, palette),
       _ => {},
     }
   }
@@ -109,9 +110,11 @@ impl Registers {
         self.ppu_data = vram.read(addr);
         return palette.read(addr - 0x3f00);
       }
-      self.ppu_addr = vram.read(addr) as u16;
+      let v = vram.read(addr) as u16;
+      self.ppu_addr.update(v);
     } else {
-      self.ppu_addr = cassette.rom_read(addr) as u16;
+      let v = cassette.rom_read(addr) as u16;
+      self.ppu_addr.update(v);
     }
 
     buf
@@ -119,11 +122,11 @@ impl Registers {
 
   pub fn ppu_data_write(
     &mut self,
-    addr: u16,
     data: u8,
     vram: &mut ram::Ram,
     palette: &mut PaletteList,
   ) {
+    let addr = self.ppu_addr.get();
     if addr >= 0x2000 {
       if addr >= 0x3f00 && addr < 0x4000 {
         palette.write(addr - 0x3f00, data);
@@ -132,6 +135,9 @@ impl Registers {
         vram.write(addr, data);
       }
     }
+
+    let v = self.ppu_addr.get() + 1;
+    self.ppu_addr.update(v);
   }
 
   pub fn get_background_table_offset(&self) -> u16 {
