@@ -28,6 +28,10 @@ impl Scroll {
     self.y
   }
 
+  pub fn inc_y(&mut self) {
+    self.y += 1;
+  }
+
   pub fn write(&mut self, data: u8) {
     match self.enable {
       Enable::X => {

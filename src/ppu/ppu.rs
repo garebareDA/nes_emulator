@@ -60,7 +60,7 @@ impl PPU {
 
       let tile_x =
         ((scroll_x as usize + (self.register.get_name_table_id() % 2) as usize * 256) / 8) as u8;
-      let tile_y = self.register.scroll.get_y();
+      let tile_y = scroll_y;
 
       self.background.build_line(
         &self.vram,
@@ -70,6 +70,8 @@ impl PPU {
         &self.palette,
         mmc,
       );
+
+      self.register.scroll.inc_y();
     }
 
     if self.line >= 262 {
