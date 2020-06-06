@@ -14,7 +14,7 @@ pub struct PPU {
   pub background: background::Background,
   cassette: Rom,
   vram: ram::Ram,
-  palette: palette::PaletteList,
+  pub palette: palette::PaletteList,
   pub config: bool,
 }
 

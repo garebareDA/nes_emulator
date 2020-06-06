@@ -17,7 +17,7 @@ impl PpuAddr {
   }
 
   pub fn update(&mut self, offset: u16) {
-    self.addr += offset;
+    self.addr = offset;
   }
 
   pub fn write(&mut self, data: u8) {

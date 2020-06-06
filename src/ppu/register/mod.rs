@@ -131,12 +131,12 @@ impl Registers {
         palette.write(addr - 0x3f00, data);
       } else {
         let addr = self.calc_addr(addr);
-        println!("{}", addr);
         vram.write(addr, data);
       }
     }
 
-    self.ppu_addr.update(1);
+    let v = self.ppu_addr.get() + 0x01;
+    self.ppu_addr.update(v);
   }
 
   pub fn get_background_table_offset(&self) -> u16 {
