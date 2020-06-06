@@ -85,7 +85,6 @@ impl Registers {
   }
 
   pub fn write(&mut self, addr: u16, data: u8, vram: &mut ram::Ram, palette: &mut PaletteList) {
-    println!("{} {}", data, addr);
     match addr {
       0x0000 => self.ctrl1 = data,
       0x0001 => self.ctrl2 = data,
@@ -132,12 +131,12 @@ impl Registers {
         palette.write(addr - 0x3f00, data);
       } else {
         let addr = self.calc_addr(addr);
+        println!("{}", addr);
         vram.write(addr, data);
       }
     }
 
-    let v = self.ppu_addr.get() + 1;
-    self.ppu_addr.update(v);
+    self.ppu_addr.update(1);
   }
 
   pub fn get_background_table_offset(&self) -> u16 {

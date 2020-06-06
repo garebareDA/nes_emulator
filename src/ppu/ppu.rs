@@ -26,7 +26,7 @@ impl PPU {
       register: register::Registers::new(),
       background: background::Background::new(),
       cassette: cassette,
-      vram: ram::Ram::new(vec![0; 0x02000]),
+      vram: ram::Ram::new(vec![0; 0x2000]),
       palette: palette::PaletteList::new(),
       config: config,
     }
