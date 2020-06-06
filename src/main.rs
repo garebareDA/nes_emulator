@@ -14,9 +14,7 @@ fn main() {
         let cycle = cpu::run::run(&mut register, &mut bus);
         let render = bus.ppu.run((cycle * 3) as usize,  &bus.mmc);
         if render {
-            //パレットはok
             println!("{:?}", bus.ppu.palette);
-            return;
             render::render_backgound(&bus.ppu.background);
             return;
         }

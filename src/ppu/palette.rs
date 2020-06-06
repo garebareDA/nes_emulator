@@ -45,9 +45,8 @@ impl PaletteList {
   }
 
   pub fn pallet_get(self, palette_id: u8) -> Vec<u8> {
-    let offset = 0x00;
-    let start = (palette_id * 4 + offset) as usize;
+    let start = (palette_id * 4) as usize;
     let end = start + 4;
-    (start..end).map(|p| self.palette[0x00]).collect()
+   (start..end).map(|p| self.palette[p]).collect()
   }
 }
