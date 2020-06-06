@@ -32,7 +32,7 @@ impl Tile {
     let splite_id = get_sprite_id(vram, position, config);
     let attr = get_attribute(vram, position, config);
     let pallet_id = (attr >> (block_id * 2)) & 0x03;
-    let sprite = build(crom, splite_id, config.offset_addr_by_background_table, &mmc);
+    let sprite = build(crom, splite_id,);
     let get = plallet.clone().pallet_get(pallet_id);
     Tile{
       sprite: sprite,
@@ -64,12 +64,12 @@ pub fn get_attribute(vram: &Ram, position: &SpritePosition, config: &SpriteConfi
   return vram.read(addr);
 }
 
-pub fn build(cram: &roms::Rom, sprite_id: u8, offset: u16, mmc: &mmc::Mmc) -> Vec<Vec<u8>> {
+pub fn build(cram: &roms::Rom, sprite_id: u8,) -> Vec<Vec<u8>> {
   let mut sprite: Vec<Vec<u8>> = (0..8).into_iter().map(|_| vec![0; 8]).collect();
     for i in 0..16 {
       for j in 0..8 {
-        let addr = sprite_id as u16 * 16 + i + offset;
-        let ram = cram.rom_read(addr);
+        let addr = sprite_id as u16 * 16 + i;
+        let ram = cram.cram_read(addr);
         if ram & (0x80 >> j) as u8 != 0 {
           sprite[(0 * 8 + i % 8) as usize][j] += (0x01 << (i / 8)) as u8;
         }

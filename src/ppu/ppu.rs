@@ -13,7 +13,7 @@ pub struct PPU {
   pub register: register::Registers,
   pub background: background::Background,
   cassette: Rom,
-  vram: ram::Ram,
+  pub vram: ram::Ram,
   pub palette: palette::PaletteList,
   pub config: bool,
 }

@@ -37,6 +37,10 @@ impl Rom {
     return cassette;
   }
 
+  pub fn cram_read(&self, addr:u16) -> u8 {
+    self.character_ram[addr as usize]
+  }
+
   pub fn rom_read(&self, addr: u16) -> u8 {
     self.programs_rom[addr as usize]
   }
