@@ -90,7 +90,7 @@ pub fn render_backgound(background: &Background) {
   for i in 0..960 {
     for y in 0..8 {
       for x in 0..8 {
-        canvas.put_pixel(25,250, im::Rgba([255, 255, 255, 255]));
+        canvas.put_pixel(x + xline, y + yline, im::Rgba([255, 255, 255, 255]));
       }
       xline += 8;
     }
@@ -99,7 +99,8 @@ pub fn render_backgound(background: &Background) {
       yline += 8;
     }
   }
-  
+  return;
+
   let texture =
     Texture::from_image(&mut texture_context, &canvas, &TextureSettings::new()).unwrap();
 
@@ -108,8 +109,6 @@ pub fn render_backgound(background: &Background) {
       clear([0.0; 4], g);
       image(&texture, _c.transform.scale(1 as f64, 1 as f64), g);
     });
-
-    
     println!("print");
   }
 }
