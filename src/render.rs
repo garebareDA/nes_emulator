@@ -72,9 +72,11 @@ pub fn render_backgound(background: &Background) {
     (0x11, 0x11, 0x11),
   ];
 
-  let height = 256;
+  let mut scale = 2;
+
+  let height = 240;
   let width = 256;
-  let mut window: PistonWindow = WindowSettings::new("nes_emulator", (width, height))
+  let mut window: PistonWindow = WindowSettings::new("nes_emulator", (width * scale, height * scale))
     .build()
     .unwrap();
 
@@ -86,6 +88,7 @@ pub fn render_backgound(background: &Background) {
 
   let mut xline = 0;
   let mut yline = 0;
+  let mut render_count = 0;
 
   for i in 0..960 {
     let bg = &background.tiles[i];
@@ -101,9 +104,11 @@ pub fn render_backgound(background: &Background) {
       }
     }
     xline += 8;
-    if i % 32 == 0 {
+    render_count += 1;
+    if render_count == 32 {
       xline = 0;
       yline += 8;
+      render_count = 0;
     }
   }
 
@@ -113,7 +118,7 @@ pub fn render_backgound(background: &Background) {
   while let Some(e) = window.next() {
     window.draw_2d(&e, |_c, g, _d| {
       clear([0.0; 4], g);
-      image(&texture, _c.transform.scale(1 as f64, 1 as f64), g);
+      image(&texture, _c.transform.scale(scale as f64, scale as f64), g);
     });
   }
 }
