@@ -72,7 +72,7 @@ pub fn render_backgound(background: &Background) {
     (0x11, 0x11, 0x11),
   ];
 
-  let height = 240;
+  let height = 256;
   let width = 256;
   let mut window: PistonWindow = WindowSettings::new("nes_emulator", (width, height))
     .build()
@@ -88,18 +88,24 @@ pub fn render_backgound(background: &Background) {
   let mut yline = 0;
 
   for i in 0..960 {
+    let bg = &background.tiles[i];
     for y in 0..8 {
       for x in 0..8 {
-        canvas.put_pixel(x + xline, y + yline, im::Rgba([255, 255, 255, 255]));
+        let plallet_id = bg.sprite[y][x];
+        let color_id  = bg.plallet[plallet_id as usize];
+        let color = colors[color_id as usize];
+        let red = color.0;
+        let blue = color.1;
+        let green = color.2;
+        canvas.put_pixel((x + xline) as u32, (y + yline) as u32, im::Rgba([red, blue, green, 255]));
       }
-      xline += 8;
     }
-    xline = 0;
+    xline += 8;
     if i % 32 == 0 {
+      xline = 0;
       yline += 8;
     }
   }
-  return;
 
   let texture =
     Texture::from_image(&mut texture_context, &canvas, &TextureSettings::new()).unwrap();
@@ -109,6 +115,5 @@ pub fn render_backgound(background: &Background) {
       clear([0.0; 4], g);
       image(&texture, _c.transform.scale(1 as f64, 1 as f64), g);
     });
-    println!("print");
   }
 }
